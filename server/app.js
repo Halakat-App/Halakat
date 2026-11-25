@@ -12,7 +12,10 @@ const app = express();
 const isVercel = process.env.VERCEL === '1' || Boolean(process.env.VERCEL_ENV);
 const localMongoUri = 'mongodb://localhost:27017/Halakat';
 const MONGODB_URI = process.env.MONGODB_URI?.trim() || localMongoUri;
-const JWT_SECRET = process.env.JWT_SECRET?.trim() || 'halakat-dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET?.trim() || (isVercel ? undefined : 'halakat-dev-secret');
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET must be configured in every deployed environment.');
+}
 const RESEND_API_KEY = process.env.RESEND_API_KEY?.trim();
 const AUTH_EMAIL_FROM = process.env.PASSWORD_RESET_FROM_EMAIL?.trim();
 const GMAIL_USER = process.env.GMAIL_USER?.trim();
